@@ -50,9 +50,13 @@ contract FundMe {
     /**
     * @notice sets i_owner to msg.sender
     */
-    constructor() {
-        i_owner = payable(msg.sender);
+    constructor(address payable owner) {
+        i_owner = owner;
     }
 
 
+    /** Getter Functions */
+    function getOwner() external view returns(address) {
+        return i_owner;
+    }
 }

@@ -1,24 +1,30 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {Test, console2} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
+import {FundMeFactory} from "../src/FundMeFactory.sol";
+import {FundMeFactoryScript} from "../script/FundMeFactory.s.sol";
 
-contract CounterTest is Test {
+contract FundMeTest is Test {
+    FundMeFactory public fundMeFactory;
     FundMe public fundMe;
+    address public deployedFundMeAddress;
+    address public OWNER = makeAddr("player");
+    uint256 public constant STARTING_USER_BALANCE = 10 ether;
 
-    function setUp() public {
-        fundMe = new FundMe();
-        // counter.setNumber(0);
+    function setUp() external {
+        FundMeFactoryScript deployScript = new FundMeFactoryScript();
+        fundMeFactory = deployScript.run();
+
     }
 
-    // function test_Increment() public {
-    //     counter.increment();
-    //     assertEq(counter.number(), 1);
-    // }
-
-    // function testFuzz_SetNumber(uint256 x) public {
-    //     counter.setNumber(x);
-    //     assertEq(counter.number(), x);
-    // }
+    function testContractDeployedSettingOwner() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+        deployedFundMeAddress = address(fundMeFactory.getFundMeContract(0));
+        fundMe = FundMe(deployedFundMeAddress);
+        console.log("factory contract:", address(fundMeFactory));
+        assertEq(fundMe.getOwner(), OWNER);
+    }
 }
