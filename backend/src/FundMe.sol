@@ -1,15 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.4;
 
 /**
-    set up a contract factory.
-
-    user should be able to launch a new contract and become owner
-
-    create a mapping that will track donors and amounts
-
-    contract should accept donations
-
     owner can cancel to return funds
         create a cancel bool so contract can't be withdrawn from
 
@@ -20,29 +12,31 @@ pragma solidity ^0.8.13;
  */
 
 contract FundMe {
-    error FundeMe__NotOwner();
+    error FundMe__NotOwner();
+    error FundMe__DonationFailed();
 
     /**
     * @notice funders key mapped to amount funded
     * @dev mapping updated anytime a user funds contract
     */
-    mapping(address => uint256) private s_addressFundedAmount;
-    /**
-    * @notice array of addresses that have funded the account
-    * @dev this array should be updated any time a new user funds contract
-    */
-    address[] private s_funders;
+    mapping(address funder=> uint256 amountFunded) private s_funderAmounts;
+
     /**
     * @notice contract owner
     */
     address payable private immutable i_owner;
 
     /**
+    * @notice Event when contract is funded
+    */
+    event ContractFunded(address indexed funder, uint256 indexed amountFunded);
+
+    /**
     * @notice Checks if msg.sender is owner
     */
     modifier onlyOwner() {
         if (msg.sender != i_owner) {
-            revert FundeMe__NotOwner();
+            revert FundMe__NotOwner();
         }
         _;
     }
@@ -54,9 +48,23 @@ contract FundMe {
         i_owner = owner;
     }
 
+    function donate() external payable {
+        (bool success, ) = payable(address(this)).call{value: msg.value}("");
+        if (!success) {
+            revert FundMe__DonationFailed();
+        }
+
+        s_funderAmounts[msg.sender] += msg.value;
+
+        emit ContractFunded(msg.sender, msg.value);
+    }
 
     /** Getter Functions */
     function getOwner() external view returns(address) {
         return i_owner;
+    }
+
+    function getBalance() external view returns(uint256) {
+        return address(this).balance;
     }
 }

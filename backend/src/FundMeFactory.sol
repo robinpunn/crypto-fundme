@@ -4,20 +4,35 @@ pragma solidity ^0.8.4;
 import {FundMe} from "./FundMe.sol";
 
 contract FundMeFactory {
-    // list of deployed contracts
-    FundMe[] private s_listOfFundMeContracts;   
+    error FundMeFactory__ContractDeletedOrDoesNotExist();
+
+    /**
+    * @notice owner key mapped to deployed
+    * @dev the createFundMeContract() function will update this mapping when executed
+    */
+    mapping(address owner=> address fundMeContract) private s_fundMeContracts;
+
     event FundMeContractCreation(address indexed fundMeContract, address indexed owner);
 
+    /**
+    * @notice a function to deploy a contract
+    * @dev this function will use msg.sender as an argument for the FundMe contract constructor
+    */
     function createFundMeContract() external {
         FundMe newFundMeContract = new FundMe(payable(msg.sender));
-        s_listOfFundMeContracts.push(newFundMeContract);
+        s_fundMeContracts[msg.sender] = address(newFundMeContract);
 
         emit FundMeContractCreation(address(newFundMeContract), msg.sender);
     }
 
-    function getFundMeContract(uint index) external view returns (FundMe) {
-        require(index < s_listOfFundMeContracts.length, "Index out of bounds");
-        return s_listOfFundMeContracts[index];
+    /**
+    * @notice a function to retreive a deployed contract address
+    * @dev this function will use msg.sender to check if an associated deployed address exists
+    */
+    function getFundMeContract() external view returns (address) {
+        if (s_fundMeContracts[msg.sender] == address(0)) {
+            revert FundMeFactory__ContractDeletedOrDoesNotExist();
+        }
+        return s_fundMeContracts[msg.sender];
     }
-
 }
