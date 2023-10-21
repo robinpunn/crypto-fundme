@@ -30,9 +30,10 @@ contract FundMeFactory {
     * @dev this function will use msg.sender to check if an associated deployed address exists
     */
     function getFundMeContract() external view returns (address) {
-        if (s_fundMeContracts[msg.sender] == address(0)) {
+        address fundMeContract = s_fundMeContracts[msg.sender];
+        if (fundMeContract == address(0)) {
             revert FundMeFactory__ContractDeletedOrDoesNotExist();
         }
-        return s_fundMeContracts[msg.sender];
+        return fundMeContract;
     }
 }

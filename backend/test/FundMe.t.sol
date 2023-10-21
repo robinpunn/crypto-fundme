@@ -11,20 +11,74 @@ contract FundMeTest is Test {
     FundMe public fundMe;
     address public deployedFundMeAddress;
     address public OWNER = makeAddr("player");
+    address public FUNDER1 = makeAddr("funder1");
     uint256 public constant STARTING_USER_BALANCE = 10 ether;
+
+    event FundMeContractCreation(address indexed fundMeContract, address indexed owner);
+    event ContractFunded(address indexed funder, uint256 indexed amountFunded);
 
     function setUp() external {
         FundMeFactoryScript deployScript = new FundMeFactoryScript();
         fundMeFactory = deployScript.run();
+        vm.deal(OWNER,STARTING_USER_BALANCE);
+        vm.deal(FUNDER1,STARTING_USER_BALANCE);
+    }
 
+    function testDeployment() public {
+        assertNotEq(address(fundMeFactory), address(0));
+    }
+
+    function testEventEmittedAfterCreatingContract() public {
+        vm.expectEmit(true,true, false, false, address(fundMeFactory));
+        emit FundMeContractCreation(address(0xd04404bcf6d969FC0Ec22021b4736510CAcec492), OWNER);
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
     }
 
     function testContractDeployedSettingOwner() public {
         vm.prank(OWNER);
         fundMeFactory.createFundMeContract();
-        deployedFundMeAddress = address(fundMeFactory.getFundMeContract(0));
-        fundMe = FundMe(deployedFundMeAddress);
-        console.log("factory contract:", address(fundMeFactory));
+        vm.prank(OWNER);
+        deployedFundMeAddress = fundMeFactory.getFundMeContract();
+        fundMe = FundMe(payable(deployedFundMeAddress));
+        // console.log("factory contract:", address(fundMeFactory));
         assertEq(fundMe.getOwner(), OWNER);
     }
+
+    function testZeroBalanceWhenDeployted() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+        vm.prank(OWNER);
+        deployedFundMeAddress = fundMeFactory.getFundMeContract();
+        fundMe = FundMe(payable(deployedFundMeAddress));
+        assertEq(fundMe.getBalance(), 0);
+    }
+
+    function testDonatingToContract() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+
+        vm.prank(OWNER);
+        deployedFundMeAddress = fundMeFactory.getFundMeContract();
+        fundMe = FundMe(payable(deployedFundMeAddress));
+
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+        assertEq(fundMe.getBalance(), 1 ether);
+    }
+
+    function testDonatingShouldEmitEvent() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+
+        vm.prank(OWNER);
+        deployedFundMeAddress = fundMeFactory.getFundMeContract();
+        fundMe = FundMe(payable(deployedFundMeAddress));
+
+        vm.expectEmit(true, true, false, false);
+        emit ContractFunded(FUNDER1, 1 ether);
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+    }
+
 }

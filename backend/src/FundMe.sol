@@ -48,6 +48,8 @@ contract FundMe {
         i_owner = owner;
     }
 
+    receive() external payable {}
+
     function donate() external payable {
         (bool success, ) = payable(address(this)).call{value: msg.value}("");
         if (!success) {
