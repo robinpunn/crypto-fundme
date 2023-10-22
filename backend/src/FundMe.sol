@@ -1,19 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.4;
 
-/**
-    owner can cancel to return funds
-        create a cancel bool so contract can't be withdrawn from
-
-    only owner should be able to withdraw
-        use self destruct ???
-
-    import OZ onlyowner??
- */
+import {FundMeFactory} from "./FundMeFactory.sol";
 
 contract FundMe {
     error FundMe__NotOwner();
     error FundMe__DonationFailed();
+    error FundMe__WithdrawFailed();
 
     /**
     * @notice funders key mapped to amount funded
@@ -25,6 +18,11 @@ contract FundMe {
     * @notice contract owner
     */
     address payable private immutable i_owner;
+
+    /**
+    * @notice factory contract
+    */
+    address private immutable i_factory;
 
     /**
     * @notice Event when contract is funded
@@ -44,8 +42,9 @@ contract FundMe {
     /**
     * @notice sets i_owner to msg.sender
     */
-    constructor(address payable owner) {
+    constructor(address payable owner, address factory) {
         i_owner = owner;
+        i_factory = factory;
     }
 
     receive() external payable {}
@@ -61,12 +60,34 @@ contract FundMe {
         emit ContractFunded(msg.sender, msg.value);
     }
 
+    function withdraw() external payable onlyOwner() {
+        address factory = getFactory();
+        FundMeFactory(factory).removeFundeMeContract(address(this));
+        (bool success, ) = i_owner.call{value: address(this).balance}("");
+        if (!success) {
+            revert FundMe__WithdrawFailed();
+        }
+    }
+
     /** Getter Functions */
+    /**
+    * @notice returns the owner of the contract
+    */
     function getOwner() external view returns(address) {
         return i_owner;
     }
-
+    /**
+    * @notice returns the balance of the contract
+    */
     function getBalance() external view returns(uint256) {
         return address(this).balance;
     }
+
+    /**
+    * @notice returns the address of the deployer contract factory
+    */
+    function getFactory() public view returns(address) {
+        return i_factory;
+    }
+
 }

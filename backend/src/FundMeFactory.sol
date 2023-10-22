@@ -5,6 +5,7 @@ import {FundMe} from "./FundMe.sol";
 
 contract FundMeFactory {
     error FundMeFactory__ContractDeletedOrDoesNotExist();
+    error FundMeFactory__NotTheOwner();
 
     /**
     * @notice owner key mapped to deployed
@@ -19,7 +20,7 @@ contract FundMeFactory {
     * @dev this function will use msg.sender as an argument for the FundMe contract constructor
     */
     function createFundMeContract() external {
-        FundMe newFundMeContract = new FundMe(payable(msg.sender));
+        FundMe newFundMeContract = new FundMe(payable(msg.sender), address(this));
         s_fundMeContracts[msg.sender] = address(newFundMeContract);
 
         emit FundMeContractCreation(address(newFundMeContract), msg.sender);
@@ -35,5 +36,16 @@ contract FundMeFactory {
             revert FundMeFactory__ContractDeletedOrDoesNotExist();
         }
         return fundMeContract;
+    }
+
+    /**
+    * @notice a function to remove contract from mapping
+    * @dev this function will use msg.sender (the contract calling the function)
+    */
+    function removeFundeMeContract(address ownerContract) external {
+        if(msg.sender != s_fundMeContracts[ownerContract]) {
+            revert FundMeFactory__NotTheOwner();
+        }
+        delete s_fundMeContracts[ownerContract];
     }
 }
