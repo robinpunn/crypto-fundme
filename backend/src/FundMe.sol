@@ -5,8 +5,10 @@ import {FundMeFactory} from "./FundMeFactory.sol";
 
 contract FundMe {
     error FundMe__NotOwner();
+    error FundMe__InvalidDonationAmount();
     error FundMe__DonationFailed();
     error FundMe__WithdrawFailed();
+    error FundMe__AddressHasNotFundedContract();
 
     /**
     * @notice funders key mapped to amount funded
@@ -20,7 +22,7 @@ contract FundMe {
     address payable private immutable i_owner;
 
     /**
-    * @notice factory contract
+    * @notice factory contract address
     */
     address private immutable i_factory;
 
@@ -49,7 +51,14 @@ contract FundMe {
 
     receive() external payable {}
 
+    /**
+    * @notice function to donate to contract
+    * @dev the function will add msg.sender and the amount to the s_funderAmount mapping
+    */
     function donate() external payable {
+        if (msg.value <= 0 ) {
+            revert FundMe__InvalidDonationAmount();
+        }
         (bool success, ) = payable(address(this)).call{value: msg.value}("");
         if (!success) {
             revert FundMe__DonationFailed();
@@ -81,6 +90,16 @@ contract FundMe {
     */
     function getBalance() external view returns(uint256) {
         return address(this).balance;
+    }
+
+    /**
+    * @notice returns the balance from s_funderAmounts using address parameter
+    */
+    function getFunderBalance(address funder) external view returns(uint256) {
+        if (s_funderAmounts[funder] == 0) {
+            revert FundMe__AddressHasNotFundedContract();
+        }
+        return s_funderAmounts[funder];
     }
 
     /**

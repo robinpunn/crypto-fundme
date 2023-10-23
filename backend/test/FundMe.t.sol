@@ -45,13 +45,37 @@ contract FundMeTest is Test {
         assertEq(fundMe.getOwner(), OWNER);
     }
 
-    function testZeroBalanceWhenDeployted() public {
+    function testGetFactoryShouldReturnFactoryAddress() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+
+        vm.prank(OWNER);
+        deployedFundMeAddress = fundMeFactory.getFundMeContract();
+        fundMe = FundMe(payable(deployedFundMeAddress));
+
+        assertEq(fundMe.getFactory(), address(fundMeFactory));
+    }
+
+    function testZeroBalanceWhenDeployed() public {
         vm.prank(OWNER);
         fundMeFactory.createFundMeContract();
         vm.prank(OWNER);
         deployedFundMeAddress = fundMeFactory.getFundMeContract();
         fundMe = FundMe(payable(deployedFundMeAddress));
         assertEq(fundMe.getBalance(), 0);
+    }
+
+    function testShouldNotBeAbletoDonateZero() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+
+        vm.prank(OWNER);
+        deployedFundMeAddress = fundMeFactory.getFundMeContract();
+        fundMe = FundMe(payable(deployedFundMeAddress));
+
+        vm.expectRevert(FundMe.FundMe__InvalidDonationAmount.selector);
+        vm.prank(FUNDER1);
+        fundMe.donate{value: 0}();
     }
 
     function testDonatingToContract() public {
@@ -79,6 +103,21 @@ contract FundMeTest is Test {
         emit ContractFunded(FUNDER1, 1 ether);
         vm.prank(FUNDER1);
         fundMe.donate{value:1 ether}();
+    }
+
+    function testDonateShouldUpdateFunderAmountsMapping() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+
+        vm.prank(OWNER);
+        deployedFundMeAddress = fundMeFactory.getFundMeContract();
+        fundMe = FundMe(payable(deployedFundMeAddress));
+
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+        assertEq(fundMe.getFunderBalance(FUNDER1), 2 ether);
     }
 
 }

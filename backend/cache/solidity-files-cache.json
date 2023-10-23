@@ -917,8 +917,8 @@
       }
     },
     "src/FundMe.sol": {
-      "lastModificationDate": 1697871024852,
-      "contentHash": "383db84ca9daa88e2dc77b14c7292798",
+      "lastModificationDate": 1698029552138,
+      "contentHash": "ea32c29f17907668944df0dce0614112",
       "sourceName": "src/FundMe.sol",
       "solcConfig": {
         "settings": {
@@ -949,7 +949,10 @@
           "libraries": {}
         }
       },
-      "imports": [],
+      "imports": [
+        "src\\FundMe.sol",
+        "src\\FundMeFactory.sol"
+      ],
       "versionRequirement": "^0.8.4",
       "artifacts": {
         "FundMe": {
@@ -958,8 +961,8 @@
       }
     },
     "src/FundMeFactory.sol": {
-      "lastModificationDate": 1697786374761,
-      "contentHash": "1c870a521abbd6ffd0e33db07888e439",
+      "lastModificationDate": 1697955388990,
+      "contentHash": "0ead1ce36a40468c2fee8d4002424383",
       "sourceName": "src/FundMeFactory.sol",
       "solcConfig": {
         "settings": {
@@ -991,7 +994,8 @@
         }
       },
       "imports": [
-        "src\\FundMe.sol"
+        "src\\FundMe.sol",
+        "src\\FundMeFactory.sol"
       ],
       "versionRequirement": "^0.8.4",
       "artifacts": {
@@ -1001,8 +1005,8 @@
       }
     },
     "test/FundMe.t.sol": {
-      "lastModificationDate": 1697872281633,
-      "contentHash": "c43a789071068fdda9486164d4e30024",
+      "lastModificationDate": 1698035542366,
+      "contentHash": "fe528807df97aec4e41cb16552aec79a",
       "sourceName": "test/FundMe.t.sol",
       "solcConfig": {
         "settings": {
