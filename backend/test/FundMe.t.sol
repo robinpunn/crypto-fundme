@@ -24,6 +24,15 @@ contract FundMeTest is Test {
         vm.deal(FUNDER1,STARTING_USER_BALANCE);
     }
 
+    modifier ownerDeploysContractSetContractVariable() {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+        vm.prank(OWNER);
+        deployedFundMeAddress = fundMeFactory.getFundMeContract();
+        fundMe = FundMe(payable(deployedFundMeAddress));
+        _;
+    }
+
     function testDeployment() public {
         assertNotEq(address(fundMeFactory), address(0));
     }
@@ -35,84 +44,38 @@ contract FundMeTest is Test {
         fundMeFactory.createFundMeContract();
     }
 
-    function testContractDeployedSettingOwner() public {
-        vm.prank(OWNER);
-        fundMeFactory.createFundMeContract();
-        vm.prank(OWNER);
-        deployedFundMeAddress = fundMeFactory.getFundMeContract();
-        fundMe = FundMe(payable(deployedFundMeAddress));
-        // console.log("factory contract:", address(fundMeFactory));
+    function testContractDeployedSettingOwner() public ownerDeploysContractSetContractVariable {
         assertEq(fundMe.getOwner(), OWNER);
     }
 
-    function testGetFactoryShouldReturnFactoryAddress() public {
-        vm.prank(OWNER);
-        fundMeFactory.createFundMeContract();
-
-        vm.prank(OWNER);
-        deployedFundMeAddress = fundMeFactory.getFundMeContract();
-        fundMe = FundMe(payable(deployedFundMeAddress));
-
+    function testGetFactoryShouldReturnFactoryAddress() public ownerDeploysContractSetContractVariable {
         assertEq(fundMe.getFactory(), address(fundMeFactory));
     }
 
-    function testZeroBalanceWhenDeployed() public {
-        vm.prank(OWNER);
-        fundMeFactory.createFundMeContract();
-        vm.prank(OWNER);
-        deployedFundMeAddress = fundMeFactory.getFundMeContract();
-        fundMe = FundMe(payable(deployedFundMeAddress));
+    function testZeroBalanceWhenDeployed() public ownerDeploysContractSetContractVariable {
         assertEq(fundMe.getBalance(), 0);
     }
 
-    function testShouldNotBeAbletoDonateZero() public {
-        vm.prank(OWNER);
-        fundMeFactory.createFundMeContract();
-
-        vm.prank(OWNER);
-        deployedFundMeAddress = fundMeFactory.getFundMeContract();
-        fundMe = FundMe(payable(deployedFundMeAddress));
-
+    function testShouldNotBeAbletoDonateZero() public ownerDeploysContractSetContractVariable {
         vm.expectRevert(FundMe.FundMe__InvalidDonationAmount.selector);
         vm.prank(FUNDER1);
         fundMe.donate{value: 0}();
     }
 
-    function testDonatingToContract() public {
-        vm.prank(OWNER);
-        fundMeFactory.createFundMeContract();
-
-        vm.prank(OWNER);
-        deployedFundMeAddress = fundMeFactory.getFundMeContract();
-        fundMe = FundMe(payable(deployedFundMeAddress));
-
+    function testDonatingToContract() public ownerDeploysContractSetContractVariable {
         vm.prank(FUNDER1);
         fundMe.donate{value:1 ether}();
         assertEq(fundMe.getBalance(), 1 ether);
     }
 
-    function testDonatingShouldEmitEvent() public {
-        vm.prank(OWNER);
-        fundMeFactory.createFundMeContract();
-
-        vm.prank(OWNER);
-        deployedFundMeAddress = fundMeFactory.getFundMeContract();
-        fundMe = FundMe(payable(deployedFundMeAddress));
-
+    function testDonatingShouldEmitEvent() public ownerDeploysContractSetContractVariable {
         vm.expectEmit(true, true, false, false);
         emit ContractFunded(FUNDER1, 1 ether);
         vm.prank(FUNDER1);
         fundMe.donate{value:1 ether}();
     }
 
-    function testDonateShouldUpdateFunderAmountsMapping() public {
-        vm.prank(OWNER);
-        fundMeFactory.createFundMeContract();
-
-        vm.prank(OWNER);
-        deployedFundMeAddress = fundMeFactory.getFundMeContract();
-        fundMe = FundMe(payable(deployedFundMeAddress));
-
+    function testDonateShouldUpdateFunderAmountsMapping() public ownerDeploysContractSetContractVariable {
         vm.prank(FUNDER1);
         fundMe.donate{value:1 ether}();
         vm.prank(FUNDER1);
