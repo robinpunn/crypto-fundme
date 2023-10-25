@@ -40,7 +40,7 @@ contract FundMeFactory {
 
     /**
     * @notice a function to remove contract from mapping
-    * @dev this function will use msg.sender (the contract calling the function)
+    * @dev this function will use msg.sender (the contract calling the function) as a check to compare with mapping
     */
     function removeFundeMeContract(address ownerContract) external {
         if(msg.sender != s_fundMeContracts[ownerContract]) {

@@ -71,7 +71,7 @@ contract FundMe {
 
     function withdraw() external payable onlyOwner() {
         address factory = getFactory();
-        FundMeFactory(factory).removeFundeMeContract(address(this));
+        FundMeFactory(factory).removeFundeMeContract(msg.sender);
         (bool success, ) = i_owner.call{value: address(this).balance}("");
         if (!success) {
             revert FundMe__WithdrawFailed();

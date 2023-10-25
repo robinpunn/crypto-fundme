@@ -12,6 +12,7 @@ contract FundMeTest is Test {
     address public deployedFundMeAddress;
     address public OWNER = makeAddr("player");
     address public FUNDER1 = makeAddr("funder1");
+    address public FUNDER2 = makeAddr("funder2");
     uint256 public constant STARTING_USER_BALANCE = 10 ether;
 
     event FundMeContractCreation(address indexed fundMeContract, address indexed owner);
@@ -22,6 +23,7 @@ contract FundMeTest is Test {
         fundMeFactory = deployScript.run();
         vm.deal(OWNER,STARTING_USER_BALANCE);
         vm.deal(FUNDER1,STARTING_USER_BALANCE);
+        vm.deal(FUNDER2,STARTING_USER_BALANCE);
     }
 
     modifier ownerDeploysContractSetContractVariable() {
@@ -33,8 +35,17 @@ contract FundMeTest is Test {
         _;
     }
 
+      ////////////////////
+     ////   Factory  ////
+    ////////////////////
+
     function testDeployment() public {
         assertNotEq(address(fundMeFactory), address(0));
+    }
+
+    function testFundmeContractsMappingShouldRevertWithoutContracts() public {
+        vm.expectRevert(FundMeFactory.FundMeFactory__ContractDeletedOrDoesNotExist.selector);
+        fundMeFactory.getFundMeContract();
     }
 
     function testEventEmittedAfterCreatingContract() public {
@@ -43,6 +54,35 @@ contract FundMeTest is Test {
         vm.prank(OWNER);
         fundMeFactory.createFundMeContract();
     }
+
+    function testFundMeContractsMappingShouldBeUpdated() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+        vm.prank(OWNER);
+        fundMeFactory.getFundMeContract();
+    }
+
+    function testAfterFundMeContractDeployedMappingShouldRevertIfNotOwner() public {
+        vm.prank(OWNER);
+        fundMeFactory.createFundMeContract();
+        vm.expectRevert(FundMeFactory.FundMeFactory__ContractDeletedOrDoesNotExist.selector);
+        vm.prank(FUNDER1);
+        fundMeFactory.getFundMeContract();
+    }
+
+    function testWithdrawShouldRemoveContractFromMapping() public ownerDeploysContractSetContractVariable {
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+        vm.prank(OWNER);
+        fundMe.withdraw();
+        vm.expectRevert(FundMeFactory.FundMeFactory__ContractDeletedOrDoesNotExist.selector);
+        vm.prank(FUNDER1);
+        fundMeFactory.getFundMeContract();
+    }
+
+      ////////////////////
+     ///    fundMe   ////
+    ////////////////////
 
     function testContractDeployedSettingOwner() public ownerDeploysContractSetContractVariable {
         assertEq(fundMe.getOwner(), OWNER);
@@ -75,12 +115,45 @@ contract FundMeTest is Test {
         fundMe.donate{value:1 ether}();
     }
 
+    function testFunderBalanceShouldRevertWithoutDonation() public ownerDeploysContractSetContractVariable {
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+        vm.expectRevert(FundMe.FundMe__AddressHasNotFundedContract.selector);
+        fundMe.getFunderBalance(FUNDER2);
+    }
+
     function testDonateShouldUpdateFunderAmountsMapping() public ownerDeploysContractSetContractVariable {
         vm.prank(FUNDER1);
         fundMe.donate{value:1 ether}();
         vm.prank(FUNDER1);
         fundMe.donate{value:1 ether}();
         assertEq(fundMe.getFunderBalance(FUNDER1), 2 ether);
+    }
+
+    function testMultipleDonationsShouldUpdateFunderAmountsMapping() public ownerDeploysContractSetContractVariable {
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+        vm.prank(FUNDER2);
+        fundMe.donate{value:1 ether}();
+        assertEq(fundMe.getFunderBalance(FUNDER1), 1 ether);
+        assertEq(fundMe.getFunderBalance(FUNDER2), 1 ether);
+    }
+
+    function testShouldNotBeAbleToWithdrawIfNotOwner() public ownerDeploysContractSetContractVariable {
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+        vm.expectRevert(FundMe.FundMe__NotOwner.selector);
+        vm.prank(FUNDER1);
+        fundMe.withdraw();
+    }
+
+    function testOwnerShouldBeAbleCallToWithdraw() public ownerDeploysContractSetContractVariable {
+        vm.prank(FUNDER1);
+        fundMe.donate{value:1 ether}();
+        vm.prank(FUNDER2);
+        fundMe.donate{value:1 ether}();
+        vm.prank(OWNER);
+        fundMe.withdraw();
     }
 
 }
