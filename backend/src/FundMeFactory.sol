@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 import {FundMe} from "./FundMe.sol";
 
 contract FundMeFactory {
+    error FundMeFactory__OnlyOneContractPerUser();
     error FundMeFactory__ContractDeletedOrDoesNotExist();
     error FundMeFactory__NotTheOwner();
 
@@ -13,16 +14,17 @@ contract FundMeFactory {
      */
     mapping(address owner => address fundMeContract) private s_fundMeContracts;
 
-    event FundMeContractCreation(
-        address indexed fundMeContract,
-        address indexed owner
-    );
+    event FundMeContractCreation(address indexed fundMeContract, address indexed owner);
 
     /**
      * @notice a function to deploy a contract
      * @dev this function will use msg.sender as an argument for the FundMe contract constructor
      */
     function createFundMeContract() external {
+        if (s_fundMeContracts[msg.sender] != address(0)) {
+            revert FundMeFactory__OnlyOneContractPerUser();
+        }
+
         FundMe newFundMeContract = new FundMe(
             payable(msg.sender),
             address(this)
