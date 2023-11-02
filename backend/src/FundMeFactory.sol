@@ -4,18 +4,38 @@ pragma solidity ^0.8.4;
 import {FundMe} from "./FundMe.sol";
 
 contract FundMeFactory {
+    //////////////
+    // Errors  ///
+    //////////////
     error FundMeFactory__OnlyOneContractPerUser();
     error FundMeFactory__ContractDeletedOrDoesNotExist();
     error FundMeFactory__NotTheOwner();
 
+    ////////////////////////
+    // State Variables  ///
+    ///////////////////////
     /**
      * @notice owner key mapped to deployed
      * @dev the createFundMeContract() function will update this mapping when executed
      */
     mapping(address owner => address fundMeContract) private s_fundMeContracts;
 
-    event FundMeContractCreation(address indexed fundMeContract, address indexed owner);
+    ///////////////
+    // Events  ///
+    //////////////
+    event FundMeContractCreation(
+        address indexed fundMeContract,
+        address indexed owner
+    );
 
+    event ContractRemoved(
+        address indexed fundMeContract,
+        address indexed owner
+    );
+
+    /////////////////
+    // Functions  ///
+    /////////////////
     /**
      * @notice a function to deploy a contract
      * @dev this function will use msg.sender as an argument for the FundMe contract constructor
@@ -56,5 +76,7 @@ contract FundMeFactory {
             revert FundMeFactory__NotTheOwner();
         }
         delete s_fundMeContracts[ownerAddress];
+
+        emit ContractRemoved(ownerAddress, msg.sender);
     }
 }

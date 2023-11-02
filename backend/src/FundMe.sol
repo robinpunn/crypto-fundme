@@ -4,6 +4,9 @@ pragma solidity ^0.8.4;
 import {FundMeFactory} from "./FundMeFactory.sol";
 
 contract FundMe {
+    //////////////
+    // Errors  ///
+    //////////////
     error FundMe__NotOwner();
     error FundMe__InvalidDonationAmount();
     error FundMe__DonationFailed();
@@ -11,6 +14,9 @@ contract FundMe {
     error FundMe__WithdrawFailed();
     error FundMe__AddressHasNotFundedContract();
 
+    ////////////////////////
+    // State Variables  ///
+    ///////////////////////
     /**
      * @notice funders key mapped to amount funded
      * @dev mapping updated anytime a user funds contract
@@ -27,11 +33,25 @@ contract FundMe {
      */
     address private immutable i_factory;
 
+    ///////////////
+    // Events  ///
+    //////////////
     /**
      * @notice Event when contract is funded
      */
     event ContractFunded(address indexed funder, uint256 indexed amountFunded);
 
+    /**
+     * @notice Event when contract is funded
+     */
+    event FundsWithdrawn(
+        address indexed owner,
+        uint256 indexed amountWithdrawn
+    );
+
+    /////////////////
+    // Modifiers  ///
+    /////////////////
     /**
      * @notice Checks if msg.sender is owner
      */
@@ -42,6 +62,9 @@ contract FundMe {
         _;
     }
 
+    ///////////////////
+    // Constructor  ///
+    ///////////////////
     /**
      * @notice sets i_owner to msg.sender
      */
@@ -50,8 +73,14 @@ contract FundMe {
         i_factory = factory;
     }
 
+    ////////////////
+    // Fallback  ///
+    ////////////////
     receive() external payable {}
 
+    /////////////////
+    // Functions  ///
+    /////////////////
     /**
      * @notice function to donate to contract
      * @dev the function will add msg.sender and the amount to the s_funderAmount mapping
@@ -60,7 +89,7 @@ contract FundMe {
         if (msg.value <= 0) {
             revert FundMe__InvalidDonationAmount();
         }
-        (bool success,) = payable(address(this)).call{value: msg.value}("");
+        (bool success, ) = payable(address(this)).call{value: msg.value}("");
         if (!success) {
             revert FundMe__DonationFailed();
         }
@@ -75,22 +104,27 @@ contract FundMe {
             revert FundMe__NoFundsToWithDraw();
         }
         address factory = getFactory();
+        uint256 amount = address(this).balance;
+
         FundMeFactory(factory).removeFundeMeContract(msg.sender);
-        (bool success,) = i_owner.call{value: address(this).balance}("");
+        (bool success, ) = i_owner.call{value: amount}("");
         if (!success) {
             revert FundMe__WithdrawFailed();
         }
+
+        emit FundsWithdrawn(msg.sender, amount);
     }
 
-    /**
-     * Getter Functions
-     */
+    ////////////////////////
+    // Getter Functions  ///
+    ////////////////////////
     /**
      * @notice returns the owner of the contract
      */
     function getOwner() external view returns (address) {
         return i_owner;
     }
+
     /**
      * @notice returns the balance of the contract
      */
