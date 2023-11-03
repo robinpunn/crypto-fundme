@@ -45,6 +45,7 @@ contract FundMe {
      * @notice Event when contract is funded
      */
     event FundsWithdrawn(
+        address indexed fundMeContract,
         address indexed owner,
         uint256 indexed amountWithdrawn
     );
@@ -112,7 +113,7 @@ contract FundMe {
             revert FundMe__WithdrawFailed();
         }
 
-        emit FundsWithdrawn(msg.sender, amount);
+        emit FundsWithdrawn(address(this), msg.sender, amount);
     }
 
     ////////////////////////

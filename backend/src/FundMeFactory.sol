@@ -77,6 +77,6 @@ contract FundMeFactory {
         }
         delete s_fundMeContracts[ownerAddress];
 
-        emit ContractRemoved(ownerAddress, msg.sender);
+        emit ContractRemoved(msg.sender, ownerAddress);
     }
 }
