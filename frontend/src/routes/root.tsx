@@ -1,5 +1,5 @@
 import '@rainbow-me/rainbowkit/styles.css';
-
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {
     getDefaultWallets,
     RainbowKitProvider,
@@ -18,6 +18,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import Layout from '../components/layout/Layout';
+import HomePage from '../components/homepage/HomePage';
 
 const alchemyApiKey = import.meta.env.VITE_ALCHEMY_ID;
 
@@ -42,14 +43,18 @@ const wagmiConfig = createConfig({
     publicClient
 })
 
-const Route = () => {
+const Root = () => {
     return (
         <WagmiConfig config={wagmiConfig}>
             <RainbowKitProvider chains={chains}>
-                <Layout />
+                <Layout>
+                    <Routes>
+                        <Route path='/' element={<HomePage />} />
+                    </Routes>
+                </Layout>
             </RainbowKitProvider>
         </WagmiConfig>
     );
 };
 
-export default Route
+export default Root

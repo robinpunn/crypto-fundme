@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styles from "../../styles/Layout.module.css"
+import Navbar from '../navbar/Navbar'
+import Footer from '../footer/Footer'
 
-const Layout = ({ children }) => {
+interface LayoutProps {
+    children: ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <>
             <Navbar />
