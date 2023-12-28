@@ -15,7 +15,7 @@ function Navbar() {
     }, [!isConnected]);
 
     return (
-        <div className={styles.navbar}>
+        <section className={styles.navbar}>
             <Link to={isConnected ? `/address` : `/`} className={styles.logo}>
                 <h1>CryptoFundMe</h1>
             </Link>
@@ -104,7 +104,7 @@ function Navbar() {
                 </ConnectButton.Custom>
             </div>
 
-        </div>
+        </section>
     )
 }
 
