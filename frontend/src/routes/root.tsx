@@ -18,7 +18,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import Layout from '../components/layout/Layout';
-import HomePage from '../components/homepage/HomePage';
+import HomePage from './HomePage';
 
 const alchemyApiKey = import.meta.env.VITE_ALCHEMY_ID;
 
