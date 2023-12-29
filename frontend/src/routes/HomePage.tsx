@@ -2,7 +2,7 @@ import styles from '../styles/Home.module.css'
 
 function HomePage() {
     return (
-        <div>THIS IS THE HOME PAGE</div>
+        <section className={styles.homePage}>THIS IS THE HOME PAGE</section>
     )
 }
 
