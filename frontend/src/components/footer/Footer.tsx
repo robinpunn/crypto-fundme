@@ -1,10 +1,10 @@
-import React from 'react'
+import styles from '../../styles/Footer.module.css'
 
 function Footer() {
     return (
-        <div>
-            <h1>This is the footer</h1>
-        </div>
+        <section className={styles.footer}>
+            <h4>created by <a className={styles.footerLink} target="_blank" rel="noopener noreferrer" href="https://github.com/robinpunn">robinpunn</a></h4>
+        </section>
     )
 }
 
