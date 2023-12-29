@@ -17,7 +17,7 @@ function Navbar() {
     return (
         <section className={styles.navbar}>
             <Link to={isConnected ? `/address` : `/`} className={styles.logo}>
-                <h1>CryptoFundMe</h1>
+                <h3>CryptoFundMe</h3>
             </Link>
 
             <div className={styles.connect}>
