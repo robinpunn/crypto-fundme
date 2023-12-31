@@ -1,3 +1,26 @@
+:root {
+    --primary-color: #F5FF00;
+    --primary-soft: #F9FF72;
+    --primary-soft-two: #f5fe4b;
+    --tetradic-one: #0A00FF;
+    --tetradic-one-soft: #7872FF;
+    --tetradic-two: #00FF89;
+    --tetradic-two-soft: #76f7bb;
+    --tetradic-three: #FF0076;
+    --tetradic-three-soft: #f483b8;
+}
+
+[data-theme='dark'] {
+    --primary-color: #1B0021;
+    --primary-soft: #727271;
+    --tetradic-one: #eaeaea;
+    --tetradic-one-soft: #7872FF;
+    --tetradic-two: #001621;
+    --tetradic-two-soft: #76f7bb;
+    --tetradic-three: #ffdbec;
+    --tetradic-three-soft: #f483b8;
+}
+
 html,
 body {
     height: 100%;
@@ -5,8 +28,8 @@ body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
         Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    background-color: #F5FF00;
-    color: #0A00FF;
+    background-color: var(--primary-soft-two);
+    color: var(--tetradic-one);
     caret-color: transparent;
 }
 
