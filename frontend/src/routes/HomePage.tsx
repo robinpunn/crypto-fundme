@@ -5,7 +5,7 @@ function HomePage() {
         <section className={styles.homePage}>
             <article className={styles.intro}>
                 <div>
-                    This app allows users to participate in crowd funding using the Ethereum blockchain. Currently deployed on the Sepolia testnet, users have the option to create contracts and donate Eth to contracts.
+                    This app allows users to participate in crowd funding using the Ethereum blockchain. Currently deployed on the Sepolia testnet, users have the option to create contracts and donate ether to contracts.
                 </div>
             </article>
 
