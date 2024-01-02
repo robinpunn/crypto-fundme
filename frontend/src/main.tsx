@@ -6,8 +6,10 @@ import {
 } from "react-router-dom";
 import Root from "./routes/root";
 import HomePage from './routes/HomePage';
+import Address from './routes/Address';
 import ErrorPage from "./error-page";
 import './styles/global.css'
+
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,7 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'address', element: <Address /> },
     ],
     errorElement: <ErrorPage />,
   },

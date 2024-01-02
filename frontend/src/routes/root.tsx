@@ -19,6 +19,7 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import Layout from '../components/layout/Layout';
 import HomePage from './HomePage';
+import Address from './Address';
 
 const alchemyApiKey = import.meta.env.VITE_ALCHEMY_ID;
 
@@ -50,6 +51,7 @@ const Root = () => {
                 <Layout>
                     <Routes>
                         <Route path='/' element={<HomePage />} />
+                        <Route path='/address' element={<Address />} />
                     </Routes>
                 </Layout>
             </RainbowKitProvider>
