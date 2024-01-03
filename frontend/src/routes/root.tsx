@@ -1,5 +1,5 @@
 import '@rainbow-me/rainbowkit/styles.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import {
     getDefaultWallets,
     RainbowKitProvider,

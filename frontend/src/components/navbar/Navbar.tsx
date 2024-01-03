@@ -10,7 +10,7 @@ function Navbar() {
 
     useEffect(() => {
         if (!isConnected) {
-            navigate('/address');
+            navigate('/');
         }
     }, [!isConnected]);
 

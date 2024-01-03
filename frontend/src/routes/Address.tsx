@@ -1,8 +1,13 @@
-import React from 'react'
+import styles from "../styles/Address.module.css"
+import CreatedContracts from "../components/address/CreatedContracts"
+import DonatedContracts from "../components/address/DonatedContracts"
 
 function Address() {
     return (
-        <div>Address</div>
+        <section className={styles.address}>
+            <CreatedContracts />
+            <DonatedContracts />
+        </section>
     )
 }
 
