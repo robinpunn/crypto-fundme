@@ -9,14 +9,22 @@ function CreatedContracts() {
     return (
         <article className={styles.created}>
             <h3>Created Contracts</h3>
-            <ul>
-                {createdContractsData.map(contract => (
-                    <li key={contract.id}>
-                        Address: {contract.contractAddress},
-                        Funded:  {contract.funded}
-                    </li>
-                ))}
-            </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Address</th>
+                        <th>Funded</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {createdContractsData.map(contract => (
+                        <tr key={contract.id}>
+                            <td>{contract.contractAddress}</td>
+                            <td>{contract.funded}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </article>
     )
 }
