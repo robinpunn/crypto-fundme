@@ -1,0 +1,14 @@
+.address {
+    margin: 0 2.5rem;
+
+    @media (min-width: 768px) {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.created,
+.donated {
+    width: 100%;
+    margin: 0.5rem;
+}
