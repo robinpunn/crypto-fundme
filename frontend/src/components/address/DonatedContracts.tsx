@@ -7,7 +7,7 @@ const donatedContractsData = [
 
 function DonatedContracts() {
     return (
-        <article className={styles.donated}>
+        <div className={styles.donated}>
             <h3>Donated Contracts</h3>
             <table>
                 <thead>
@@ -25,7 +25,7 @@ function DonatedContracts() {
                     ))}
                 </tbody>
             </table>
-        </article>
+        </div>
     )
 }
 
