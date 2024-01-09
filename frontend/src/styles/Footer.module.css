@@ -1,14 +1,30 @@
+:root {
+    --primary-color: #F5FF00;
+    --primary-soft: #F9FF72;
+    --primary-soft-two: #f5fe4b;
+    --tetradic-one: #0A00FF;
+    --tetradic-one-soft: #7872FF;
+    --tetradic-two: #00FF89;
+    --tetradic-two-soft: #76f7bb;
+    --tetradic-three: #FF0076;
+    --tetradic-three-soft: #f483b8;
+}
+
 .footer {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 1rem;
+    margin: 0;
+    padding: 0;
+    color: var(--tetradic-three);
     text-align: center;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
 }
 
 .footerLink {
-    color: #0A00FF;
+    color: var(--tetradic-two);
     text-decoration: underline;
 }
 
