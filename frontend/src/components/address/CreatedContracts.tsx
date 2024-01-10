@@ -9,7 +9,7 @@ function CreatedContracts() {
     return (
         <div className={styles.created}>
             <h3>Created Contracts</h3>
-            <table>
+            <table className={styles.table}>
                 <thead>
                     <tr>
                         <th>Address</th>

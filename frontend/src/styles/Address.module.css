@@ -1,9 +1,46 @@
 .address {
     margin: 0 2.5rem;
+    display: grid;
+    gap: 1rem;
+
+    @media (max-width: 767px) {
+        grid-template-areas:
+            'info'
+            'contracts';
+        grid-template-rows: auto auto;
+    }
 
     @media (min-width: 768px) {
-        display: flex;
-        justify-content: space-between;
+        grid-template-areas:
+            'info'
+            'contracts';
+        grid-template-rows: auto auto;
+    }
+}
+
+.info {
+    grid-area: info;
+
+    @media (min-width: 768px) {
+        margin: 0 auto;
+        text-align: center;
+    }
+}
+
+.welcome {
+    font-weight: bold;
+}
+
+.contracts {
+    grid-area: contracts;
+    display: grid;
+    gap: 1rem;
+
+    @media (min-width: 768px) {
+        grid-template-areas:
+            'created donated';
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 }
 
@@ -11,4 +48,28 @@
 .donated {
     width: 100%;
     margin: 0.5rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    padding: 10px;
+    border: 2px solid var(--tetradic-two);
+    color: var(--tetradic-three);
+    text-align: left;
+}
+
+.table th:first-child,
+.table td:first-child {
+    width: 50%;
+}
+
+.table th:last-child,
+.table td:last-child {
+    width: 50%;
 }

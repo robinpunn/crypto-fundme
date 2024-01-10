@@ -9,7 +9,7 @@ function DonatedContracts() {
     return (
         <div className={styles.donated}>
             <h3>Donated Contracts</h3>
-            <table>
+            <table className={styles.table}>
                 <thead>
                     <tr>
                         <th>Address</th>
