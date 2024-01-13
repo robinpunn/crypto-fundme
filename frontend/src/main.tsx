@@ -7,6 +7,7 @@ import {
 import Root from "./routes/root";
 import HomePage from './routes/HomePage';
 import Address from './routes/Address';
+import FundMe from './routes/FundMe';
 import ErrorPage from "./error-page";
 import './styles/global.css'
 
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'address', element: <Address /> },
+      { path: 'fundme', element: <FundMe /> },
     ],
     errorElement: <ErrorPage />,
   },

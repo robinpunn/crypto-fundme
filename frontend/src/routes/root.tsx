@@ -20,6 +20,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import Layout from '../components/layout/Layout';
 import HomePage from './HomePage';
 import Address from './Address';
+import FundMe from './FundMe';
 
 const alchemyApiKey = import.meta.env.VITE_ALCHEMY_ID;
 
@@ -52,6 +53,7 @@ const Root = () => {
                     <Routes>
                         <Route path='/' element={<HomePage />} />
                         <Route path='/address' element={<Address />} />
+                        <Route path='/fundme' element={<FundMe />} />
                     </Routes>
                 </Layout>
             </RainbowKitProvider>
