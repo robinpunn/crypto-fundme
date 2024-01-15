@@ -1,15 +1,3 @@
-:root {
-    --primary-color: #F5FF00;
-    --primary-soft: #F9FF72;
-    --primary-soft-two: #f5fe4b;
-    --tetradic-one: #0A00FF;
-    --tetradic-one-soft: #7872FF;
-    --tetradic-two: #00FF89;
-    --tetradic-two-soft: #76f7bb;
-    --tetradic-three: #FF0076;
-    --tetradic-three-soft: #f483b8;
-}
-
 .footer {
     position: fixed;
     bottom: 0;
@@ -29,6 +17,6 @@
 }
 
 .footerLink:hover {
-    color: #FF0076;
+    color: var(--tetradic-three);
     transition: color 0.5s ease-in-out;
 }

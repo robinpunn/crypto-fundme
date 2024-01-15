@@ -4,16 +4,23 @@ function FundMe() {
     return (
         <section className={styles.fundme}>
             <article className={styles.info}>
-                <h3 className={styles.title}>Address: </h3>
+                <h3 className={styles.owner}>Owner: </h3>
+                <h3 className={styles.contract}>Contract: </h3>
                 <h3 className={styles.raised}>Amount Raised: </h3>
             </article>
 
+            <article className={styles.buttons}>
+                <button>Donate</button>
+                <button>Withdraw</button>
+            </article>
+
             <article className={styles.donated}>
+                <h3>Donations</h3>
                 <table className={styles.table}>
                     <thead>
                         <tr>
                             <th>Address</th>
-                            <th>Funded</th>
+                            <th>Donated</th>
                             <th>Comment</th>
                         </tr>
                     </thead>
@@ -25,11 +32,6 @@ function FundMe() {
                         </tr>
                     </tbody>
                 </table>
-            </article>
-
-            <article>
-                <button>Donate</button>
-                <button>Withdraw</button>
             </article>
         </section>
     )
