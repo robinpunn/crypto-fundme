@@ -1,0 +1,76 @@
+.fundme {
+    margin: 0 2.5rem;
+    display: grid;
+    gap: 1rem;
+
+    @media (max-width: 767px) {
+        grid-template-areas:
+            'info'
+            'buttons'
+            'donated';
+        grid-template-rows: auto auto auto;
+    }
+
+    @media (min-width: 768px) {
+        grid-template-areas:
+            'info'
+            'buttons'
+            'donated';
+        grid-template-rows: auto auto auto;
+    }
+}
+
+.info {
+    grid-area: info;
+    display: grid;
+    gap: 1rem;
+
+    @media (max-width: 767px) {
+        grid-template-areas:
+            'owner'
+            'contract'
+            'raised';
+        grid-template-rows: auto auto auto;
+    }
+
+    @media (min-width: 768px) {
+        grid-template-areas: 'owner contract raised';
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.buttons {
+    grid-area: buttons;
+    margin-top: 2.5rem;
+}
+
+.donated {
+    grid-area: donated;
+    width: 100%;
+    /* border: 2px solid var(--tetradic-one); */
+    text-align: center;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+
+    th,
+    td {
+        padding: 10px;
+        /* border: 2px solid var(--tetradic-two); */
+        color: var(--tetradic-three);
+        text-align: left;
+    }
+
+    th:first-child,
+    td:first-child {
+        width: 25%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+        width: 25%;
+    }
+}
